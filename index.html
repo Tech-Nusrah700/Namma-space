@@ -1,0 +1,60 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Namma Space | 3D Room Explorer</title>
+  </head>
+  <body>
+    <header class="navbar">
+      <a class="logo" href="#">NAMMA <span>SPACE</span></a>
+      <div class="tag">TECHFEST PROJECT</div>
+    </header>
+
+    <main class="main-layout">
+      <section class="intro">
+        <p class="eyebrow">REAL SPACE. DIGITAL EXPERIENCE.</p>
+        <h1>Step inside<br />your <span>space.</span></h1>
+
+        <p class="description">
+          Explore an indoor environment reconstructed
+          in 3D. Walk around and discover the space
+          directly in your browser.
+        </p>
+
+        <button id="startBtn">Start Exploring ↗</button>
+
+        <p class="hint">
+          WASD to move · Mouse to look around
+        </p>
+      </section>
+
+      <section class="viewer-card">
+        <div class="viewer-header">
+          <span>3D ROOM VIEWER</span>
+          <span id="status">Loading scene...</span>
+        </div>
+
+        <div id="viewer">
+          <div id="loading">Preparing your 3D room...</div>
+        </div>
+
+        <div class="controls">
+          <span><b>W</b> Forward</span>
+          <span><b>A</b> Left</span>
+          <span><b>S</b> Backward</span>
+          <span><b>D</b> Right</span>
+          <span>Mouse: Look around</span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Namma Space · 3D Reconstruction</span>
+      <span>Built for Techfest</span>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
