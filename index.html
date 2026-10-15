@@ -1,60 +1,323 @@
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Namma Space | 3D Room Explorer</title>
+    <meta name="description" content="Namma Space — Explore indoor environments reconstructed in immersive 3D. Step inside real spaces, digitally reimagined for your browser." />
+    <title>Namma Space | 3D Space Exploration</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <header class="navbar">
-      <a class="logo" href="#">NAMMA <span>SPACE</span></a>
-      <div class="tag">TECHFEST PROJECT</div>
+
+    <!-- ═══════════════════════════ NAVBAR ═══════════════════════════ -->
+    <header class="navbar" id="navbar">
+      <a class="logo" href="#hero">NAMMA <span>SPACE</span></a>
+      <nav class="nav-links" id="nav-links">
+        <a href="#about"        class="nav-link" id="nav-about">About</a>
+        <a href="#features"     class="nav-link" id="nav-features">Features</a>
+        <a href="#how-it-works" class="nav-link" id="nav-process">How It Works</a>
+        <a href="#experience"   class="nav-cta"  id="nav-explore">Explore ↗</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
     </header>
 
-    <main class="main-layout">
-      <section class="intro">
-        <p class="eyebrow">REAL SPACE. DIGITAL EXPERIENCE.</p>
-        <h1>Step inside<br />your <span>space.</span></h1>
+    <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+    <section id="hero" class="hero-section">
+      <canvas id="particles-canvas" aria-hidden="true"></canvas>
+      <div class="hero-glow hero-glow--left"  aria-hidden="true"></div>
+      <div class="hero-glow hero-glow--right" aria-hidden="true"></div>
 
-        <p class="description">
-          Explore an indoor environment reconstructed
-          in 3D. Walk around and discover the space
-          directly in your browser.
+      <div class="hero-inner">
+
+        <!-- Left: Text -->
+        <div class="intro">
+          <p class="eyebrow">REAL SPACES. DIGITAL EXPERIENCES.</p>
+          <h1>Step inside<br/>your <em>space.</em></h1>
+          <p class="description">
+            Explore an indoor environment reconstructed in true 3D.
+            Walk around, look anywhere, and discover the space directly in your browser — no downloads, no headset.
+          </p>
+          <div class="hero-cta-group">
+            <button id="startBtn" class="btn-primary">Start Exploring ↗</button>
+            <a href="#about" class="btn-ghost" id="discover-link">Discover Project ↓</a>
+          </div>
+          <p class="hint">WASD to move &nbsp;·&nbsp; Mouse to look around &nbsp;·&nbsp; ESC to exit</p>
+        </div>
+
+        <!-- Right: 3D Viewer -->
+        <div class="viewer-card" id="viewer-card-hero">
+          <div class="viewer-header">
+            <span class="viewer-label">
+              <span class="viewer-dot"></span>3D ROOM VIEWER
+            </span>
+            <span id="status">Loading scene...</span>
+          </div>
+
+          <div id="viewer">
+            <div id="loading">Preparing your 3D room...</div>
+            <div class="viewer-orbit-hint" id="orbitHint">
+              🖱&nbsp; Drag to orbit &nbsp;·&nbsp; Scroll to zoom
+            </div>
+          </div>
+
+          <div class="controls">
+            <span><b>W</b> Forward</span>
+            <span><b>A</b> Left</span>
+            <span><b>S</b> Back</span>
+            <span><b>D</b> Right</span>
+            <span class="controls-sep">|</span>
+            <span>Mouse: Look around</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="scroll-indicator" aria-hidden="true">
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ ABOUT ═══════════════════════════ -->
+    <section id="about" class="about-section">
+      <div class="section-inner">
+        <div class="about-tag reveal">ABOUT THE PROJECT</div>
+        <div class="about-grid">
+          <div class="about-headline reveal">
+            <h2>Where physical<br/><em>spaces meet</em><br/>digital reality.</h2>
+          </div>
+          <div class="about-body">
+            <p class="reveal reveal-delay-1">
+              <strong>Namma Space</strong> is an immersive 3D space exploration platform that
+              digitally reconstructs real indoor environments — making them accessible,
+              navigable, and interactive, right in a web browser.
+            </p>
+            <p class="reveal reveal-delay-2">
+              We photograph physical spaces, reconstruct them as detailed 3D models,
+              and deliver first-person browser-based exploration — no app installations,
+              no VR headset, no special hardware required.
+            </p>
+            <div class="about-stats reveal reveal-delay-3">
+              <div class="stat">
+                <span class="stat-num">3D</span>
+                <span class="stat-label">Real-time Rendering</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num">0</span>
+                <span class="stat-label">Downloads Needed</span>
+              </div>
+              <div class="stat">
+                <span class="stat-num">360°</span>
+                <span class="stat-label">Full Exploration</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ FEATURES ═══════════════════════════ -->
+    <section id="features" class="features-section">
+      <div class="section-inner">
+        <div class="section-label reveal">CAPABILITIES</div>
+        <h2 class="section-title reveal">Built for<br/><em>real experiences.</em></h2>
+        <div class="features-grid">
+
+          <div class="feature-card reveal reveal-delay-1" data-tilt id="feat-viz">
+            <div class="feature-icon">🏛</div>
+            <h3>Immersive 3D Visualization</h3>
+            <p>Spaces reconstructed with high-fidelity geometry and realistic lighting, rendered in real-time WebGL.</p>
+          </div>
+
+          <div class="feature-card reveal reveal-delay-2" data-tilt id="feat-nav">
+            <div class="feature-icon">🕹</div>
+            <h3>Interactive Navigation</h3>
+            <p>Walk freely using intuitive WASD controls and mouse-look — exactly like a first-person experience.</p>
+          </div>
+
+          <div class="feature-card reveal reveal-delay-3" data-tilt id="feat-scale">
+            <div class="feature-icon">📐</div>
+            <h3>True-Scale Representation</h3>
+            <p>Spaces are reconstructed at real-world scale, preserving accurate proportions, dimensions and depth.</p>
+          </div>
+
+          <div class="feature-card reveal reveal-delay-1" data-tilt id="feat-browser">
+            <div class="feature-icon">🌐</div>
+            <h3>Browser-Based Access</h3>
+            <p>No plugins or installs. The entire 3D experience runs natively in any modern web browser.</p>
+          </div>
+
+          <div class="feature-card reveal reveal-delay-2" data-tilt id="feat-orbit">
+            <div class="feature-icon">🚀</div>
+            <h3>Orbit Showcase Mode</h3>
+            <p>Auto-rotating preview lets anyone appreciate the space from every angle before exploring first-person.</p>
+          </div>
+
+          <div class="feature-card reveal reveal-delay-3" data-tilt id="feat-responsive">
+            <div class="feature-icon">📱</div>
+            <h3>Responsive Interface</h3>
+            <p>Adapts fluidly across laptops, tablets, and desktops with a consistent, polished UI at every size.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ HOW IT WORKS ═══════════════════════════ -->
+    <section id="how-it-works" class="howitworks-section">
+      <div class="section-inner">
+        <div class="section-label reveal">PROCESS</div>
+        <h2 class="section-title light reveal">How it<br/><em>comes alive.</em></h2>
+        <div class="steps-grid">
+
+          <div class="step-card reveal reveal-delay-1" id="step-capture">
+            <div class="step-num">01</div>
+            <div class="step-icon">📸</div>
+            <h3>Capture</h3>
+            <p>Photograph the physical indoor space from multiple angles to capture complete spatial information.</p>
+          </div>
+
+          <div class="step-connector" aria-hidden="true"></div>
+
+          <div class="step-card reveal reveal-delay-2" id="step-reconstruct">
+            <div class="step-num">02</div>
+            <div class="step-icon">⚙️</div>
+            <h3>Reconstruct</h3>
+            <p>Process images to generate a detailed 3D model with accurate geometry, surfaces, and materials.</p>
+          </div>
+
+          <div class="step-connector" aria-hidden="true"></div>
+
+          <div class="step-card reveal reveal-delay-3" id="step-load">
+            <div class="step-num">03</div>
+            <div class="step-icon">📦</div>
+            <h3>Load</h3>
+            <p>Export the model as a <code>.glb</code> file and load it into the web-based 3D viewer for rendering.</p>
+          </div>
+
+          <div class="step-connector" aria-hidden="true"></div>
+
+          <div class="step-card reveal reveal-delay-4" id="step-explore">
+            <div class="step-num">04</div>
+            <div class="step-icon">🌍</div>
+            <h3>Explore</h3>
+            <p>Navigate the reconstructed space freely in your browser — walk around, look anywhere, discover every corner.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ EXPERIENCE ═══════════════════════════ -->
+    <section id="experience" class="experience-section">
+      <div class="experience-bg-blur" aria-hidden="true"></div>
+      <div class="experience-ring experience-ring--1" aria-hidden="true"></div>
+      <div class="experience-ring experience-ring--2" aria-hidden="true"></div>
+      <div class="section-inner experience-inner">
+        <div class="section-label reveal" style="text-align:center">LIVE DEMO</div>
+        <h2 class="section-title light reveal" style="text-align:center">Enter the<br/><em>space.</em></h2>
+        <p class="experience-desc reveal reveal-delay-1">
+          Click below to launch the full immersive 3D experience.
+          Use WASD to walk and mouse to look around the reconstructed room.
         </p>
-
-        <button id="startBtn">Start Exploring ↗</button>
-
-        <p class="hint">
-          WASD to move · Mouse to look around
-        </p>
-      </section>
-
-      <section class="viewer-card">
-        <div class="viewer-header">
-          <span>3D ROOM VIEWER</span>
-          <span id="status">Loading scene...</span>
+        <div class="reveal reveal-delay-2">
+          <button class="btn-experience" id="launchBtn">
+            <span class="btn-experience-icon" aria-hidden="true">⬡</span>
+            Launch Full Experience
+          </button>
         </div>
+        <p class="experience-hint reveal reveal-delay-3">Fullscreen &nbsp;·&nbsp; First-person &nbsp;·&nbsp; Real-time 3D</p>
+      </div>
+    </section>
 
-        <div id="viewer">
-          <div id="loading">Preparing your 3D room...</div>
+    <!-- ═══════════════════════════ TECH STACK ═══════════════════════════ -->
+    <section id="tech" class="tech-section">
+      <div class="section-inner">
+        <div class="tech-grid">
+          <div class="tech-left">
+            <div class="section-label reveal">TECHNOLOGY STACK</div>
+            <h2 class="reveal">Powered by<br/><em>open web.</em></h2>
+            <p class="reveal reveal-delay-1">
+              Built entirely with modern web technologies to deliver real-time 3D
+              without any dependencies outside the browser.
+            </p>
+            <div class="tech-pills reveal reveal-delay-2">
+              <span class="tech-pill" id="pill-threejs">Three.js</span>
+              <span class="tech-pill" id="pill-js">JavaScript</span>
+              <span class="tech-pill" id="pill-webgl">WebGL</span>
+              <span class="tech-pill" id="pill-html">HTML5</span>
+              <span class="tech-pill" id="pill-css">CSS3</span>
+              <span class="tech-pill" id="pill-vite">Vite</span>
+              <span class="tech-pill" id="pill-gltf">GLB / glTF</span>
+            </div>
+          </div>
+
+          <div class="tech-right reveal reveal-delay-2">
+            <div class="project-card" id="project-info-card">
+              <div class="project-card-header">PROJECT</div>
+              <h3>Namma Space</h3>
+              <p>Indoor 3D Space Reconstruction &amp; Browser-Based Exploration Platform</p>
+              <div class="project-meta">
+                <div class="meta-item">
+                  <span class="meta-label">Team</span>
+                  <span class="meta-val">Visionary Minds</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Stack</span>
+                  <span class="meta-val">Three.js + Vite</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Model</span>
+                  <span class="meta-val">GLB / glTF</span>
+                </div>
+              </div>
+              <a href="https://github.com/Tech-Nusrah700/Namma-space.git"
+                 target="_blank" rel="noopener noreferrer"
+                 class="github-btn" id="github-link">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                View on GitHub ↗
+              </a>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div class="controls">
-          <span><b>W</b> Forward</span>
-          <span><b>A</b> Left</span>
-          <span><b>S</b> Backward</span>
-          <span><b>D</b> Right</span>
-          <span>Mouse: Look around</span>
+    <!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <a class="logo" href="#hero" id="footer-logo">NAMMA <span>SPACE</span></a>
+          <p>Real Spaces. Digital Experiences.</p>
         </div>
-      </section>
-    </main>
-
-    <footer>
-      <span>Namma Space · 3D Reconstruction</span>
-      <span>Built for Techfest</span>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="#about"        id="footer-about">About</a>
+          <a href="#features"     id="footer-features">Features</a>
+          <a href="#how-it-works" id="footer-process">How It Works</a>
+          <a href="#experience"   id="footer-experience">Experience</a>
+        </nav>
+        <div class="footer-right">
+          <p>Built by <strong>Visionary Minds</strong></p>
+          <a href="https://github.com/Tech-Nusrah700/Namma-space.git"
+             target="_blank" rel="noopener noreferrer"
+             class="footer-gh" id="footer-github">
+            GitHub Repository ↗
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2024 Namma Space &nbsp;·&nbsp; Team Visionary Minds</span>
+      </div>
     </footer>
 
     <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/effects.js"></script>
   </body>
 </html>
