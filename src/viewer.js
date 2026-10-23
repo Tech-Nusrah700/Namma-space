@@ -44,9 +44,40 @@ export function createSpaceViewer(container, options = {}) {
 
   // Loading Overlay
   const loadingEl = document.createElement("div");
-  loadingEl.className = "viewer-loading-badge";
-  loadingEl.innerHTML = `<span class="viewer-spinner"></span> Initializing Neural Spatial Scene...`;
+  loadingEl.className = "viewer-loading-overlay";
+  loadingEl.innerHTML = `
+    <div class="viewer-loader-content">
+      <span class="viewer-spinner"></span>
+      <span class="viewer-loader-title">Loading 3D Digital Twin...</span>
+      <span class="viewer-loader-sub">WebGL 2.0 · Three.js Shaders</span>
+    </div>
+  `;
   container.appendChild(loadingEl);
+
+  // Status Badge
+  const statusBadge = document.createElement("div");
+  statusBadge.className = "viewer-status-badge";
+  statusBadge.innerHTML = `<span class="viewer-dot"></span> <span class="viewer-status-text">3D Room Active · Orbit Showcase</span>`;
+  container.appendChild(statusBadge);
+
+  // Quick On-Screen Reset View button
+  const quickResetBtn = document.createElement("button");
+  quickResetBtn.className = "viewer-quick-reset-btn";
+  quickResetBtn.title = "Reset View to default camera angle";
+  quickResetBtn.type = "button";
+  quickResetBtn.innerHTML = `↺ Reset View`;
+  container.appendChild(quickResetBtn);
+
+  // Active FPS Walk Mode Banner
+  const fpsBanner = document.createElement("div");
+  fpsBanner.className = "viewer-fps-banner";
+  fpsBanner.style.display = "none";
+  fpsBanner.innerHTML = `
+    <span class="fps-banner-title">🕹️ Walk Mode Active</span>
+    <span class="fps-banner-keys">WASD to walk · Mouse to look</span>
+    <button class="fps-banner-exit-btn" id="exitWalkBtn" type="button">Exit Walk (ESC)</button>
+  `;
+  container.appendChild(fpsBanner);
 
   // Orbit Hint
   const orbitHintEl = document.createElement("div");
@@ -129,7 +160,7 @@ export function createSpaceViewer(container, options = {}) {
       id: "desk",
       position: new THREE.Vector3(-1.5, 1.45, -2.5),
       title: "Digital Workstation Rig",
-      desc: "Dual-display compute node with real-time WebGL spatial modeling pipeline and PBR screen emission."
+      desc: "Dual-display compute workstation with real-time WebGL spatial modeling pipeline and PBR screen emission."
     },
     {
       id: "sofa",
@@ -141,13 +172,13 @@ export function createSpaceViewer(container, options = {}) {
       id: "window",
       position: new THREE.Vector3(2.6, 2.3, -4.8),
       title: "Architectural Aperture",
-      desc: "1.8m × 1.3m window with RectAreaLight raycast casting real-time soft shadows onto the wooden floor."
+      desc: "1.8m × 1.3m window with soft directional daylight raycast onto the wooden floor."
     },
     {
       id: "bookshelf",
       position: new THREE.Vector3(-4.2, 1.9, -3.5),
       title: "Library Archive",
-      desc: "2.6m vertical shelving with procedural geometric volumes and multi-spectral book materials."
+      desc: "2.6m vertical wooden shelving with procedural geometric storage volumes."
     },
     {
       id: "art",
@@ -464,8 +495,9 @@ export function createSpaceViewer(container, options = {}) {
         isCinematicTour = false;
         orbitControls.enabled = false;
         orbitHintEl.style.opacity = "0";
-        loadingEl.textContent = "First-Person Navigation Active · ESC to unlock";
-        loadingEl.style.opacity = "1";
+        fpsBanner.style.display = "flex";
+        const txt = statusBadge.querySelector(".viewer-status-text");
+        if (txt) txt.textContent = "First-Person Walk Active";
         updateFsHudMode("First-Person");
         if (onStatusChange) onStatusChange("Exploring");
       });
@@ -473,12 +505,23 @@ export function createSpaceViewer(container, options = {}) {
       pointerControls.addEventListener("unlock", () => {
         isExploring = false;
         orbitControls.enabled = true;
-        orbitControls.autoRotate = true;
+        orbitControls.autoRotate = autoStartOrbit;
         orbitHintEl.style.opacity = "1";
-        loadingEl.textContent = "Aakar 3D Room Active · Showcase Orbit";
+        fpsBanner.style.display = "none";
+        const txt = statusBadge.querySelector(".viewer-status-text");
+        if (txt) txt.textContent = "3D Room Active · Orbit Showcase";
         updateFsHudMode("Orbit");
         if (onStatusChange) onStatusChange("Ready");
       });
+
+      // Quick on-screen buttons
+      quickResetBtn.addEventListener("click", resetCamera);
+      const exitWalkBtn = fpsBanner.querySelector("#exitWalkBtn");
+      if (exitWalkBtn) {
+        exitWalkBtn.addEventListener("click", () => {
+          if (pointerControls && pointerControls.isLocked) pointerControls.unlock();
+        });
+      }
 
       // Canvas click for Raycasting Hotspots
       renderer.domElement.addEventListener("click", onCanvasClick);
@@ -486,13 +529,13 @@ export function createSpaceViewer(container, options = {}) {
 
       setTimeout(() => {
         if (!isDestroyed) {
-          loadingEl.textContent = "Spatial Twin Loaded · 60 FPS · Click canvas or Start Exploring";
+          loadingEl.classList.add("viewer-loaded");
           setTimeout(() => {
-            if (!isExploring && loadingEl) loadingEl.style.opacity = "0.75";
-          }, 2400);
+            if (!isDestroyed && loadingEl) loadingEl.style.display = "none";
+          }, 450);
           if (onStatusChange) onStatusChange("Ready");
         }
-      }, 400);
+      }, 500);
 
       startAnimationLoop();
       return true;
@@ -500,6 +543,15 @@ export function createSpaceViewer(container, options = {}) {
       console.error("Three.js initialization failed:", err);
       loadingEl.style.display = "none";
       errorEl.style.display = "flex";
+      const retryBtn = errorEl.querySelector(".btn-retry");
+      if (retryBtn) {
+        retryBtn.onclick = () => {
+          errorEl.style.display = "none";
+          loadingEl.style.display = "flex";
+          loadingEl.classList.remove("viewer-loaded");
+          initScene();
+        };
+      }
       if (onStatusChange) onStatusChange("Error");
       return false;
     }
@@ -584,13 +636,19 @@ export function createSpaceViewer(container, options = {}) {
 
   function showTooltip(data, clientX, clientY) {
     hotspotTooltip.innerHTML = `
-      <div class="tip-badge">3D SPATIAL ANNOTATION</div>
+      <div class="tip-header">
+        <span class="tip-badge">3D SPATIAL ANNOTATION</span>
+        <button class="tip-close-btn" aria-label="Close annotation">✕</button>
+      </div>
       <h4 class="tip-title">${data.title}</h4>
       <p class="tip-desc">${data.desc}</p>
-      <div class="tip-coords">Coordinate: (${data.position.x.toFixed(1)}, ${data.position.y.toFixed(1)}, ${data.position.z.toFixed(1)})</div>
+      <div class="tip-coords">Dimension / Pos: (${data.position.x.toFixed(1)}m, ${data.position.y.toFixed(1)}m, ${data.position.z.toFixed(1)}m)</div>
     `;
-    hotspotTooltip.style.left = `${Math.min(window.innerWidth - 280, Math.max(20, clientX - 120))}px`;
-    hotspotTooltip.style.top = `${Math.max(80, clientY - 140)}px`;
+    const closeBtn = hotspotTooltip.querySelector(".tip-close-btn");
+    if (closeBtn) closeBtn.onclick = hideTooltip;
+
+    hotspotTooltip.style.left = `${Math.min(window.innerWidth - 290, Math.max(20, clientX - 120))}px`;
+    hotspotTooltip.style.top = `${Math.max(70, clientY - 140)}px`;
     hotspotTooltip.style.display = "block";
     hotspotTooltip.style.animation = "fadeInScale 200ms ease";
   }
@@ -788,9 +846,10 @@ export function createSpaceViewer(container, options = {}) {
     setTimeout(handleResize, 100);
   }
 
-  document.addEventListener("fullscreenchange", () => {
+  const onFullscreenChange = () => {
     if (!document.fullscreenElement && isFullscreen) exitFullscreen();
-  });
+  };
+  document.addEventListener("fullscreenchange", onFullscreenChange);
 
   // Fullscreen HUD Buttons
   const fsExitBtn = fullscreenHud.querySelector(".btn-fs-exit");
@@ -885,6 +944,7 @@ export function createSpaceViewer(container, options = {}) {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("blur", onBlur);
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
       resizeObserver.disconnect();
 
       if (renderer?.domElement) {

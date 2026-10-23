@@ -15,7 +15,7 @@ export function createLoginPage() {
         <div class="auth-header">
           <a href="/" data-route="/" class="auth-logo">AA<span>KAR</span></a>
           <h1 class="auth-title">Welcome back</h1>
-          <p class="auth-subtitle">Sign in to access your private 3D workspace and photo vault.</p>
+          <p class="auth-subtitle">Sign in to access your 3D spatial workspace and photo dataset.</p>
         </div>
 
         <div id="loginAlert" class="auth-alert" style="display: none;"></div>

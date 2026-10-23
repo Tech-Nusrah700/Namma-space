@@ -18,7 +18,7 @@ export function createAboutPage() {
         </div>
         <h1 class="about-main-title">Where physical architecture meets<br/><em>neural spatial reality.</em></h1>
         <p class="about-main-lead">
-          <strong>Aakar</strong> is a web-first spatial computing platform that digitally reconstructs physical indoor environments into interactive, millimeter-accurate 3D digital twins. It delivers first-person architectural telepresence directly in modern web browsers without specialized hardware or software installations.
+          <strong>Aakar</strong> is a web-first spatial computing platform that digitally reconstructs physical indoor environments into interactive, architecturally scaled 3D digital twins. It delivers first-person architectural telepresence directly in modern web browsers without specialized hardware or software installations.
         </p>
       </div>
     </section>
@@ -31,12 +31,12 @@ export function createAboutPage() {
             <h2>Next-generation spatial capture for the open web.</h2>
             <div class="about-stats">
               <div class="stat">
-                <span class="stat-num">99.2%</span>
-                <span class="stat-label">Geometric Accuracy</span>
+                <span class="stat-num">1:1</span>
+                <span class="stat-label">Architectural Scale (10m × 10m)</span>
               </div>
               <div class="stat">
-                <span class="stat-num">&lt; 1.4s</span>
-                <span class="stat-label">Shader Initialization</span>
+                <span class="stat-num">60 FPS</span>
+                <span class="stat-label">Real-Time WebGL Engine</span>
               </div>
               <div class="stat">
                 <span class="stat-num">6-DoF</span>
@@ -148,7 +148,7 @@ export function createAboutPage() {
                 <td class="col-highlight"><strong>Zero Installs (100% WebGL / Web-Native)</strong></td>
               </tr>
               <tr>
-                <td><strong>Millimeter Scale Accuracy</strong></td>
+                <td><strong>Scale & Proportions</strong></td>
                 <td>None (Distorted)</td>
                 <td>Good</td>
                 <td class="col-highlight"><strong>True 1:1 Architectural Scale (10m × 10m)</strong></td>
@@ -160,10 +160,10 @@ export function createAboutPage() {
                 <td class="col-highlight"><strong>Live ACES Filmic Day / Sunset / Midnight</strong></td>
               </tr>
               <tr>
-                <td><strong>Spatial AI Assistant</strong></td>
+                <td><strong>Spatial Knowledge Assistant</strong></td>
                 <td>None</td>
                 <td>None</td>
-                <td class="col-highlight"><strong>Integrated 3D Knowledge & LLM Engine</strong></td>
+                <td class="col-highlight"><strong>Built-in 3D Spatial Knowledge Engine</strong></td>
               </tr>
             </tbody>
           </table>
@@ -195,7 +195,7 @@ export function createAboutPage() {
           <div class="feature-card">
             <div class="feature-icon">🌐</div>
             <h3>Zero Dependency Web Delivery</h3>
-            <p>Single lightweight Vite bundle with Three.js vendor code-splitting ensuring sub-second first contentful paint.</p>
+            <p>Single lightweight Vite bundle with Three.js vendor code-splitting ensuring fast browser initialization and 60 FPS performance.</p>
           </div>
           <div class="feature-card">
             <div class="feature-icon">🚀</div>

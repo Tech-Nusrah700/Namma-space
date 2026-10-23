@@ -24,7 +24,7 @@ export function createWorkspacePage() {
           <div class="ws-avatar-large">${escapeHtml(user.avatar || "U")}</div>
           <div>
             <h1 class="ws-title">Workspace · ${escapeHtml(user.name)}</h1>
-            <p class="ws-subtitle">Private 3D Reconstruction Hub & Asset Vault</p>
+            <p class="ws-subtitle">3D Reconstruction Hub & Photo Dataset</p>
           </div>
         </div>
 
@@ -34,7 +34,7 @@ export function createWorkspacePage() {
             💬 3D Space Chat
           </button>
           <button class="ws-tab-btn" data-tab="photos">
-            📸 Photo Vault & Ingestion
+            📸 Photo Dataset & Ingestion
           </button>
           <button class="ws-tab-btn" data-tab="settings">
             ⚙️ Profile & Settings
@@ -145,7 +145,7 @@ export function createWorkspacePage() {
                     <span id="uploadStatusText" class="upload-status-text">Uploading...</span>
                   </div>
                   <button type="button" id="confirmUploadBtn" class="btn-primary">
-                    Upload to Private Vault ↗
+                    Ingest Photos into Workspace ↗
                   </button>
                 </div>
               </div>
@@ -192,15 +192,26 @@ export function createWorkspacePage() {
                   </div>
                 </div>
               </div>
+
+              <!-- Launch Resulting 3D Space Banner -->
+              <div class="pipeline-launch-box" id="pipeLaunchBox" style="display: none;">
+                <div class="pipe-launch-info">
+                  <strong>✓ 3D Space Ready for Exploration</strong>
+                  <span>Multi-view geometry calibrated to 10m × 10m room footprint</span>
+                </div>
+                <a href="/explore" data-route="/explore" class="btn-primary btn-sm">
+                  View Resulting 3D Space ↗
+                </a>
+              </div>
             </div>
 
-            <!-- Vault Gallery -->
+            <!-- Ingested Photos Gallery -->
             <div class="vault-gallery-card">
               <div class="gallery-header">
                 <div>
-                  <h3 class="gallery-title">Your Private Photo Vault</h3>
+                  <h3 class="gallery-title">Ingested Space Photos</h3>
                   <p class="gallery-subtitle">
-                    Images are securely stored and isolated in your private account.
+                    Images are stored and isolated locally in your account.
                   </p>
                 </div>
                 <span class="gallery-count-badge" id="vaultCountBadge">0 Photos</span>
@@ -677,12 +688,25 @@ export function createWorkspacePage() {
   function renderVaultGrid() {
     const photos = storage.getPhotos(user.id);
     vaultCountBadge.textContent = `${photos.length} Photo${photos.length === 1 ? "" : "s"}`;
+    const pipeCount = container.querySelector("#pipePhotosCount");
+    if (pipeCount) pipeCount.textContent = `${photos.length} Photo${photos.length === 1 ? "" : "s"} Ingested`;
+
+    const pipeLaunchBox = container.querySelector("#pipeLaunchBox");
+    if (pipeLaunchBox) {
+      pipeLaunchBox.style.display = photos.length > 0 ? "flex" : "none";
+      pipeLaunchBox.querySelectorAll("a[data-route]").forEach(link => {
+        link.onclick = (e) => {
+          e.preventDefault();
+          router.navigate(link.getAttribute("data-route"));
+        };
+      });
+    }
 
     if (!photos.length) {
       vaultGrid.innerHTML = `
         <div class="vault-empty">
           <div class="empty-icon">📁</div>
-          <h4>No photos in your vault yet</h4>
+          <h4>No space photos in your dataset yet</h4>
           <p>Upload room photographs above to begin 3D reconstruction processing.</p>
         </div>
       `;
@@ -870,7 +894,7 @@ function generateSpatialAssistantReply(query) {
   }
 
   if (q.includes("photo") || q.includes("capture") || q.includes("picture") || q.includes("camera") || q.includes("how to")) {
-    return `**Best Practices for Room Photo Capture (Photogrammetry Pipeline):**\n\n1. **Overlap is Key:** Take overlapping photos (minimum 60–80% overlap between adjacent shots).\n2. **Fixed Lighting:** Keep curtains and artificial lights consistent throughout capture to avoid photometric mismatch.\n3. **Perimeter Orbit:** Walk around room walls taking inward-facing shots, then capture key furniture clusters from high, eye-level, and low angles.\n4. **Avoid Blur & Lens Distortion:** Use standard wide to 35mm equivalent focal length and maintain sharp focus.\n5. **Upload:** Drop all images in the **Photo Vault** tab above. Our ingestion engine will validate dimensions and prepare the point-cloud reconstruction dataset.`;
+    return `**Best Practices for Room Photo Capture (Photogrammetry Pipeline):**\n\n1. **Overlap is Key:** Take overlapping photos (minimum 60–80% overlap between adjacent shots).\n2. **Fixed Lighting:** Keep curtains and artificial lights consistent throughout capture to avoid photometric mismatch.\n3. **Perimeter Orbit:** Walk around room walls taking inward-facing shots, then capture key furniture clusters from high, eye-level, and low angles.\n4. **Avoid Blur & Lens Distortion:** Use standard wide to 35mm equivalent focal length and maintain sharp focus.\n5. **Upload:** Drop all images in the **Photo Dataset** tab above. Our ingestion engine will validate dimensions and prepare the point-cloud reconstruction dataset.`;
   }
 
   if (q.includes("lighting") || q.includes("pipeline") || q.includes("webgl") || q.includes("three")) {
@@ -885,7 +909,7 @@ function generateSpatialAssistantReply(query) {
     return `**Model Export & Asset Formats:**\n\nReconstructed spaces can be exported as standard **glTF / .glb** binary containers. These contain baked UV textures, PBR metallic-roughness materials, and embedded camera waypoints ready for browser rendering, Blender editing, or VR headsets.`;
   }
 
-  return `Thank you for your spatial query about **"${query}"**.\n\nIn **Aakar**, physical spaces are captured through multi-view photography, reconstructed into 3D meshes with millimeter spatial fidelity, and served natively via Three.js.\n\nYou can:\n- Inquire about room dimensions and furniture placement\n- Request photography and camera capture tips\n- Upload your room images in the **Photo Vault** tab\n- Launch the interactive 3D viewer anytime from the top navigation.`;
+  return `Thank you for your spatial query about **"${query}"**.\n\nIn **Aakar**, physical spaces are captured through multi-view photography, reconstructed into 3D meshes with 1:1 architectural scale fidelity, and served natively via Three.js.\n\nYou can:\n- Inquire about room dimensions and furniture placement\n- Request photography and camera capture tips\n- Upload your room images in the **Photo Dataset** tab\n- Launch the interactive 3D viewer anytime from the top navigation.`;
 }
 
 /* ─── External API Handlers (when configured) ─── */

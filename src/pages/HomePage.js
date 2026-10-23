@@ -1,5 +1,14 @@
 /**
  * HomePage.js — High-Impact Hackathon Landing Page with 3D Spatial Digital Twin
+ *
+ * Implements:
+ * 1. Professional Hero Section with main headline: "Bridging physical architecture with the spatial web."
+ * 2. Two clear primary actions: "Explore 3D Space" & "How It Works"
+ * 3. High-fidelity interactive 3D digital twin room viewer
+ * 4. Redesigned Problem & Solution side-by-side comparison cards (warm off-white background, green accents)
+ * 5. Clear 3-step Reconstruction Workflow (Capture -> Reconstruct -> WebGL Telepresence)
+ * 6. Three Engineering Capabilities feature cards with simple icons, 1-sentence explanations, and working links
+ * 7. Hackathon Demo Quickstart banner for judges
  */
 
 import { createSpaceViewer } from "../viewer.js";
@@ -11,7 +20,7 @@ export function createHomePage() {
   container.className = "page-home";
 
   container.innerHTML = `
-    <!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+    <!-- ═══════════════════════════ HERO SECTION ═══════════════════════════ -->
     <section class="hero-section">
       <canvas id="particles-canvas" class="home-particles" aria-hidden="true"></canvas>
       <div class="hero-glow hero-glow--left" aria-hidden="true"></div>
@@ -22,48 +31,44 @@ export function createHomePage() {
         <div class="intro">
           <div class="hero-badge-pill">
             <span class="pulse-dot-green"></span>
-            <span>INTERACTIVE 3D SPACES</span>
+            <span>INTERACTIVE 3D SPATIAL DIGITAL TWIN</span>
           </div>
 
-          <h1>Reconstructing reality into interactive<br/><em>3D digital twins.</em></h1>
+          <h1>Bridging physical architecture<br/><em>with the spatial web.</em></h1>
+          
           <p class="description">
-            Explore a detailed 3D room right in your browser. Move through the space, inspect its features, and experience architecture from a new perspective.
+            Explore high-fidelity 3D spatial digital twins directly in your browser. Walk inside, inspect architectural dimensions, and experience spaces interactively without specialized software.
           </p>
 
+          <!-- Two Clear Hero Buttons -->
           <div class="hero-cta-group">
-            <button id="heroStartBtn" class="btn-primary">
-              <span class="btn-icon">🕹</span> Walk Inside ↗
-            </button>
-            <button id="heroTourBtn" class="btn-ghost">
-              <span class="btn-icon">🎥</span> Cinematic Tour
-            </button>
-            <button id="heroFullscreenBtn" class="btn-ghost">
-              <span class="btn-icon">⛶</span> Full Screen
-            </button>
-            <a href="/explore" class="btn-ghost" data-route="/explore">
-              Dedicated Explorer →
+            <a href="/explore" class="btn-primary hero-btn-main" data-route="/explore">
+              <span class="btn-icon">🕹</span> Explore 3D Space ↗
+            </a>
+            <a href="#workflow" class="btn-ghost hero-btn-sub" id="heroHowItWorksBtn">
+              <span class="btn-icon">⚙️</span> How It Works ↓
             </a>
           </div>
 
           <p class="hint">
-            ⌨️ <b>WASD / Arrows</b> to move &nbsp;·&nbsp; 🖱 <b>Mouse</b> to look &nbsp;·&nbsp; 💡 <b>Click glowing pins</b> to inspect objects
+            ⌨️ <b>WASD / Arrows</b> to move &nbsp;·&nbsp; 🖱 <b>Mouse drag</b> to orbit &nbsp;·&nbsp; 💡 <b>Click pins</b> to inspect objects
           </p>
 
           <!-- Telemetry Quick Strip -->
           <div class="hero-quick-stats">
             <div class="q-stat">
-              <span class="q-num">In browser</span>
-              <span class="q-lbl">No installation needed</span>
-            </div>
-            <div class="q-stat-sep">/</div>
-            <div class="q-stat">
               <span class="q-num">10m × 10m</span>
-              <span class="q-lbl">Room dimensions</span>
+              <span class="q-lbl">Room Dimensions</span>
             </div>
             <div class="q-stat-sep">/</div>
             <div class="q-stat">
-              <span class="q-num">WebGL</span>
+              <span class="q-num">WebGL 2.0</span>
               <span class="q-lbl">Native Browser Access</span>
+            </div>
+            <div class="q-stat-sep">/</div>
+            <div class="q-stat">
+              <span class="q-num">60 FPS</span>
+              <span class="q-lbl">Real-Time Shaders</span>
             </div>
           </div>
         </div>
@@ -75,17 +80,17 @@ export function createHomePage() {
               <span class="viewer-dot"></span> 3D DIGITAL TWIN · LIVING WORKSPACE
             </span>
             <div class="viewer-header-actions">
+              <button id="cardResetBtn" class="viewer-mini-btn" title="Reset Camera View to origin">
+                ↺ Reset View
+              </button>
+              <button id="homeLightBtn" class="viewer-mini-btn" title="Cycle Atmosphere Mood (Day / Sunset / Midnight)">
+                ☀️ Mood
+              </button>
               <button id="homeWireframeBtn" class="viewer-mini-btn" title="Toggle Wireframe Mesh">
                 📐 Mesh
               </button>
-              <button id="homeLightBtn" class="viewer-mini-btn" title="Cycle Atmosphere (Day / Sunset / Midnight)">
-                ☀️ Mood
-              </button>
-              <button id="cardFsBtn" class="viewer-mini-btn btn-highlight-mini" title="Expand Full Screen">
+              <button id="cardFsBtn" class="viewer-mini-btn btn-highlight-mini" title="Expand Fullscreen Viewport">
                 ⛶ Fullscreen
-              </button>
-              <button id="cardResetBtn" class="viewer-mini-btn" title="Reset Camera">
-                ↺ Reset
               </button>
             </div>
           </div>
@@ -100,76 +105,258 @@ export function createHomePage() {
             <span class="controls-sep">|</span>
             <span><b>Mouse</b> Look around</span>
             <span class="controls-sep">|</span>
-            <span class="controls-hint-active">💡 Interactive 3D pins active</span>
+            <button id="cardWalkInsideBtn" class="viewer-inline-walk-btn" title="Engage First-Person Walk Mode">
+              🕹 Walk Inside ↗
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════ HACKATHON VALUE PROPOSITION ═══════════════════════════ -->
-    <section class="problem-solution-section">
+    <!-- ═══════════════════════════ PROBLEM & SOLUTION SECTION ═══════════════════════════ -->
+    <section class="problem-solution-section" id="value-proposition">
       <div class="section-inner">
         <div class="ps-header">
-          <span class="section-label">THE PARADIGM SHIFT</span>
-          <h2 class="section-title">Bridging physical architecture<br/><em>with real-time spatial web.</em></h2>
+          <span class="ps-badge">THE PARADIGM SHIFT</span>
+          <h2 class="ps-title">
+            Reimagining physical spaces<br />
+            <em>for the interactive web.</em>
+          </h2>
+          <p class="ps-lead">
+            Traditional architectural documentation flattens the built environment. AAKAR creates authentic spatial presence that anyone can walk through directly from their web browser.
+          </p>
         </div>
 
         <div class="ps-grid">
-          <div class="ps-card problem-card">
-            <div class="ps-tag">THE PROBLEM</div>
-            <h3>Flat Media Cannot Convey Space</h3>
-            <p>
-              Traditional architectural surveying, real estate walkthroughs, and spatial documentation rely on flat 2D photography and static video pans. They lose perspective, obscure true room proportions, and require expensive specialized lidar or proprietary desktop viewers.
+          <!-- 01 THE PROBLEM CARD -->
+          <article class="ps-card problem-card">
+            <div class="ps-card-header">
+              <span class="ps-card-num">01</span>
+              <span class="ps-card-tag tag-problem">THE CHALLENGE</span>
+            </div>
+            <h3 class="ps-card-title">Flat 2D media cannot convey true space.</h3>
+            <p class="ps-card-desc">
+              Photographs, static floor plans, and pre-recorded videos lose depth perception and spatial proportions.
             </p>
-            <ul class="ps-list">
-              <li>❌ Zero depth perception or interactive spatial walkthroughs</li>
-              <li>❌ Expensive proprietary software with heavy installation hurdles</li>
-              <li>❌ Inability to verify real-world millimeter scale directly in-browser</li>
+
+            <ul class="ps-points-list">
+              <li class="ps-point">
+                <span class="ps-point-icon cross" aria-hidden="true">✕</span>
+                <div>
+                  <strong>No Depth Perception:</strong> Flat images flatten room volume and make it difficult to evaluate ceiling height and clearances.
+                </div>
+              </li>
+              <li class="ps-point">
+                <span class="ps-point-icon cross" aria-hidden="true">✕</span>
+                <div>
+                  <strong>Installation Friction:</strong> Heavy proprietary CAD applications create software barriers for clients and collaborators.
+                </div>
+              </li>
+              <li class="ps-point">
+                <span class="ps-point-icon cross" aria-hidden="true">✕</span>
+                <div>
+                  <strong>Static Lighting Context:</strong> Impossible to evaluate how natural daylight, sun angles, or fixtures interact with architectural materials.
+                </div>
+              </li>
             </ul>
+
+            <div class="ps-card-footer">
+              <span class="ps-footer-dot dot-problem"></span>
+              <span>Traditional 2D Architectural Workflows</span>
+            </div>
+          </article>
+
+          <!-- 02 THE SOLUTION CARD (MORE PROMINENT) -->
+          <article class="ps-card solution-card prominent">
+            <div class="ps-highlight-ribbon">RECOMMENDED SOLUTION</div>
+            <div class="ps-card-header">
+              <span class="ps-card-num">02</span>
+              <span class="ps-card-tag tag-solution">THE AAKAR SOLUTION</span>
+            </div>
+            <h3 class="ps-card-title">Interactive 3D spaces, native to the browser.</h3>
+            <p class="ps-card-desc">
+              AAKAR reconstructs physical environments into responsive WebGL digital twins that anyone can navigate and inspect instantly.
+            </p>
+
+            <ul class="ps-points-list">
+              <li class="ps-point">
+                <span class="ps-point-icon check" aria-hidden="true">✓</span>
+                <div>
+                  <strong>Real-Time 6-DoF Walk:</strong> Move freely through the room in first-person with smooth 60 FPS WebGL rendering.
+                </div>
+              </li>
+              <li class="ps-point">
+                <span class="ps-point-icon check" aria-hidden="true">✓</span>
+                <div>
+                  <strong>Zero Installation:</strong> Runs instantly in any standard modern web browser without plugins or downloads.
+                </div>
+              </li>
+              <li class="ps-point">
+                <span class="ps-point-icon check" aria-hidden="true">✓</span>
+                <div>
+                  <strong>Interactive Spatial Telemetry:</strong> Inspect clickable hotspot annotations, dimension footprints, and lighting cycles.
+                </div>
+              </li>
+            </ul>
+
+            <div class="ps-card-footer">
+              <span class="ps-footer-dot dot-solution"></span>
+              <span>The AAKAR Digital Twin Experience</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ RECONSTRUCTION WORKFLOW ═══════════════════════════ -->
+    <section class="workflow-section" id="workflow">
+      <div class="section-inner">
+        <div class="workflow-header">
+          <span class="section-label">HOW IT WORKS</span>
+          <h2 class="section-title light">
+            From multi-angle photos to<br />
+            <em>interactive 3D spaces.</em>
+          </h2>
+          <p class="workflow-lead">
+            A simple 3-stage pipeline that converts standard smartphone photographs into responsive, dimension-aware digital twins.
+          </p>
+        </div>
+
+        <div class="workflow-grid">
+          <!-- STEP 1 -->
+          <div class="wf-card">
+            <div class="wf-step-badge">STAGE 01</div>
+            <div class="wf-icon">📸</div>
+            <h3>Multi-Angle Photo Capture</h3>
+            <p>
+              Take overlapping photos (60–80% overlap) walking around walls and furniture using any standard smartphone camera.
+            </p>
+            <span class="wf-tech-tag">Standard Mobile Cameras · Zero Hardware Needed</span>
           </div>
 
-          <div class="ps-card solution-card">
-            <div class="ps-tag tag-solution">THE AAKAR SOLUTION</div>
-            <h3>Universal Browser-Native 3D Twins</h3>
+          <!-- STEP 2 -->
+          <div class="wf-card">
+            <div class="wf-step-badge">STAGE 02</div>
+            <div class="wf-icon">⚙️</div>
+            <h3>Spatial Reconstruction</h3>
             <p>
-              Aakar presents interactive 3D spaces in the browser, with first-person navigation and clickable points of interest. Open the experience on a supported phone, tablet, or computer without installing an app.
+              Structure-from-Motion (SfM) identifies feature keypoints, solves camera poses, and generates an architecturally scaled 3D mesh.
             </p>
-            <ul class="ps-list list-check">
-              <li>✓ First-person telepresence with realistic physics and camera height</li>
-              <li>✓ Zero downloads: runs instantly on any phone, tablet, or PC</li>
-              <li>✓ Interactive spatial telemetry, annotations, and exportable GLB assets</li>
-            </ul>
+            <span class="wf-tech-tag">Point Cloud Estimation · Poisson Surface Synthesis</span>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="wf-card">
+            <div class="wf-step-badge">STAGE 03</div>
+            <div class="wf-icon">🌐</div>
+            <h3>Interactive 3D Exploration</h3>
+            <p>
+              Load the digital twin instantly in your browser at 60 FPS with first-person navigation, lighting modes, and spatial annotations.
+            </p>
+            <span class="wf-tech-tag">Three.js WebGL 2.0 · Real-Time Shaders</span>
+          </div>
+        </div>
+
+        <!-- Workflow CTA Banner -->
+        <div class="workflow-cta-strip">
+          <div class="wf-cta-text">
+            <h4>Ready to experience the 3D room?</h4>
+            <p>Walk inside the living room digital twin or upload photos in the workspace.</p>
+          </div>
+          <div class="wf-cta-actions">
+            <a href="/explore" data-route="/explore" class="btn-primary">
+              <span class="btn-icon">🕹</span> Launch 3D Explorer ↗
+            </a>
+            <a href="/workspace" data-route="/workspace" class="btn-ghost">
+              <span class="btn-icon">📁</span> Open Workspace
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════ ARCHITECTURAL CAPABILITIES ═══════════════════════════ -->
-    <section class="highlights-section">
+    <!-- ═══════════════════════════ ENGINEERING CAPABILITIES ═══════════════════════════ -->
+    <section class="highlights-section" id="capabilities">
       <div class="section-inner">
-        <div class="section-label">ENGINEERING CAPABILITIES</div>
-        <h2 class="section-title light">Engineered for <em>spatial precision.</em></h2>
+        <div class="highlights-header">
+          <span class="section-label">ENGINEERING CAPABILITIES</span>
+          <h2 class="section-title light">
+            Engineered for<br />
+            <em>spatial precision.</em>
+          </h2>
+          <p class="highlights-description">
+            Three core working capabilities built for architects, interior designers, and spatial web explorers.
+          </p>
+        </div>
 
         <div class="highlights-grid">
-          <div class="highlight-card">
-            <div class="hl-icon">⚡</div>
-            <h3>Sub-Second WebGL Rendering</h3>
-            <p>Explore the room with smooth, real-time rendering. Performance depends on your device and browser.</p>
-            <a href="/explore" data-route="/explore" class="hl-link">Explore in Fullscreen Viewer →</a>
-          </div>
+          <!-- CAPABILITY 1 -->
+          <article class="highlight-card">
+            <div class="hl-card-top">
+              <div class="hl-icon" aria-hidden="true">🕹️</div>
+              <span class="hl-index">01 / NAVIGATION</span>
+            </div>
+            <h3>Interactive 3D Exploration</h3>
+            <p>
+              Navigate architectural spaces in first-person or orbit mode with responsive controls and real-time lighting.
+            </p>
+            <a href="/explore" data-route="/explore" class="hl-link">
+              Explore 3D Viewer <span aria-hidden="true">↗</span>
+            </a>
+          </article>
 
-          <div class="highlight-card">
-            <div class="hl-icon">📐</div>
-            <h3>True Millimeter Scale</h3>
-            <p>Calibrated coordinate space preserves exact 1:1 architectural dimensions, floor clearances, and furniture layouts.</p>
-            <a href="/about" data-route="/about" class="hl-link">Read Technical Pipeline →</a>
-          </div>
+          <!-- CAPABILITY 2 -->
+          <article class="highlight-card">
+            <div class="hl-card-top">
+              <div class="hl-icon" aria-hidden="true">📐</div>
+              <span class="hl-index">02 / DIMENSIONS</span>
+            </div>
+            <h3>Spatial Measurements</h3>
+            <p>
+              Inspect architectural room dimensions (10m × 10m footprint, 3.5m ceiling), surface materials, and interactive spatial hotspots.
+            </p>
+            <a href="/about" data-route="/about" class="hl-link">
+              View Technical Specs <span aria-hidden="true">↗</span>
+            </a>
+          </article>
 
-          <div class="highlight-card">
-            <div class="hl-icon">🔒</div>
-            <h3>Private Spatial Vault</h3>
-            <p>Upload room photo datasets to your isolated private workspace. Ingest images, extract camera metadata, and query the spatial AI.</p>
-            <a href="/workspace" data-route="/workspace" class="hl-link">Enter Workspace →</a>
+          <!-- CAPABILITY 3 -->
+          <article class="highlight-card">
+            <div class="hl-card-top">
+              <div class="hl-icon" aria-hidden="true">📁</div>
+              <span class="hl-index">03 / WORKSPACE</span>
+            </div>
+            <h3>Spatial Workspace</h3>
+            <p>
+              Manage space photographs, track 4-stage reconstruction pipeline stages, and test custom indoor captures.
+            </p>
+            <a href="/workspace" data-route="/workspace" class="hl-link">
+              Open Workspace <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════ HACKATHON DEMO QUICK-START ═══════════════════════════ -->
+    <section class="demo-quickstart-section">
+      <div class="section-inner">
+        <div class="demo-quickstart-card">
+          <div class="demo-badge">AAKAR HACKATHON ENTRY · VISIONARY MINDS</div>
+          <h3>Ready to test the digital twin?</h3>
+          <p>
+            Step directly into our 10m × 10m reconstructed architectural space. Test camera controls, toggle wireframe shaders, and inspect spatial annotations with zero installations.
+          </p>
+          <div class="demo-action-buttons">
+            <a href="/explore" data-route="/explore" class="btn-primary">
+              <span class="btn-icon">🕹</span> Open 3D Space Explorer ↗
+            </a>
+            <a href="/about" data-route="/about" class="btn-ghost">
+              <span class="btn-icon">📄</span> Technical Whitepaper
+            </a>
+            <a href="https://github.com/Tech-Nusrah700/Namma-space.git" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+              <span class="btn-icon">⚡</span> GitHub Repository ↗
+            </a>
           </div>
         </div>
       </div>
@@ -187,35 +374,23 @@ export function createHomePage() {
     });
   }
 
-  // Hero Actions
-  const startBtn = container.querySelector("#heroStartBtn");
-  if (startBtn && viewerInstance) {
-    startBtn.addEventListener("click", () => {
+  // Smooth scroll for "How It Works" button
+  const howBtn = container.querySelector("#heroHowItWorksBtn");
+  if (howBtn) {
+    howBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const workflowSection = container.querySelector("#workflow");
+      if (workflowSection) {
+        workflowSection.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  }
+
+  // Viewer Controls inside hero card
+  const cardWalkInsideBtn = container.querySelector("#cardWalkInsideBtn");
+  if (cardWalkInsideBtn && viewerInstance) {
+    cardWalkInsideBtn.addEventListener("click", () => {
       viewerInstance.enterExplore();
-    });
-  }
-
-  const tourBtn = container.querySelector("#heroTourBtn");
-  if (tourBtn && viewerInstance) {
-    tourBtn.addEventListener("click", () => {
-      const isRunning = viewerInstance.toggleCinematicTour();
-      tourBtn.innerHTML = isRunning
-        ? `<span class="btn-icon">⏹</span> Stop Tour`
-        : `<span class="btn-icon">🎥</span> Cinematic Tour`;
-    });
-  }
-
-  const fsBtn = container.querySelector("#heroFullscreenBtn");
-  if (fsBtn && viewerInstance) {
-    fsBtn.addEventListener("click", () => {
-      viewerInstance.enterFullscreen();
-    });
-  }
-
-  const cardFsBtn = container.querySelector("#cardFsBtn");
-  if (cardFsBtn && viewerInstance) {
-    cardFsBtn.addEventListener("click", () => {
-      viewerInstance.toggleFullscreen();
     });
   }
 
@@ -223,6 +398,13 @@ export function createHomePage() {
   if (cardResetBtn && viewerInstance) {
     cardResetBtn.addEventListener("click", () => {
       viewerInstance.resetCamera();
+    });
+  }
+
+  const cardFsBtn = container.querySelector("#cardFsBtn");
+  if (cardFsBtn && viewerInstance) {
+    cardFsBtn.addEventListener("click", () => {
+      viewerInstance.toggleFullscreen();
     });
   }
 
@@ -246,7 +428,7 @@ export function createHomePage() {
   const canvasEl = container.querySelector("#particles-canvas");
   const particleController = initParticles(canvasEl);
 
-  // Link interceptor
+  // Link interceptor for SPA navigation
   container.querySelectorAll("a[data-route]").forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();

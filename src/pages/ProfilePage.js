@@ -35,7 +35,7 @@ export function createProfilePage() {
           <div class="profile-stats-grid">
             <div class="p-stat-box">
               <span class="p-stat-num">${photos.length}</span>
-              <span class="p-stat-label">Photos in Vault</span>
+              <span class="p-stat-label">Photos in Dataset</span>
             </div>
             <div class="p-stat-box">
               <span class="p-stat-num">${messages.length}</span>
@@ -61,7 +61,7 @@ export function createProfilePage() {
               </div>
               <div class="profile-meta-row">
                 <span class="pm-label">Storage Type:</span>
-                <span class="pm-val">Isolated Encrypted Local Vault</span>
+                <span class="pm-val">Isolated Workspace Local Storage</span>
               </div>
             </div>
           </div>
