@@ -117,9 +117,14 @@ export function createWorkspacePage() {
                 <div class="upload-icon">📷</div>
                 <h3 class="upload-title">Drag & drop space photos here</h3>
                 <p class="upload-desc">Or click below to browse image files from your computer</p>
-                <button type="button" id="browsePhotosBtn" class="btn-primary btn-sm">
-                  Browse Files
-                </button>
+                <div class="upload-btn-group">
+                  <button type="button" id="browsePhotosBtn" class="btn-primary btn-sm">
+                    Browse Files
+                  </button>
+                  <button type="button" id="loadSampleDatasetBtn" class="btn-ghost btn-sm" title="Quickly load sample room captures for testing">
+                    ⚡ Load Sample Dataset
+                  </button>
+                </div>
                 <p class="upload-format-hint">Supports JPG, PNG, and WebP (up to 10MB per photo)</p>
               </div>
 
@@ -146,6 +151,47 @@ export function createWorkspacePage() {
               </div>
 
               <div id="uploadFeedbackAlert" class="auth-alert" style="display: none; margin-top: 16px;"></div>
+            </div>
+
+            <!-- Neural Pipeline Status Tracker -->
+            <div class="pipeline-tracker-card">
+              <div class="pipeline-tracker-header">
+                <div>
+                  <span class="ps-tag tag-solution">ACTIVE 3D NEURAL PIPELINE</span>
+                  <h3 class="pipeline-title">Spatial Ingestion & Reconstruction Engine</h3>
+                </div>
+                <span class="status-pill-green"><span class="pulse-dot-green"></span> Ready for Synthesis</span>
+              </div>
+              <div class="pipeline-stages-grid">
+                <div class="pipe-stage stage-done">
+                  <div class="stage-num">01</div>
+                  <div class="stage-body">
+                    <span class="stage-name">Multi-View Ingestion</span>
+                    <span class="stage-sub" id="pipePhotosCount">0 Photos Ingested</span>
+                  </div>
+                </div>
+                <div class="pipe-stage stage-active">
+                  <div class="stage-num">02</div>
+                  <div class="stage-body">
+                    <span class="stage-name">Sparse Pose Estimation</span>
+                    <span class="stage-sub">SIFT Keypoint Matching</span>
+                  </div>
+                </div>
+                <div class="pipe-stage">
+                  <div class="stage-num">03</div>
+                  <div class="stage-body">
+                    <span class="stage-name">Dense Stereo Matching</span>
+                    <span class="stage-sub">Point Cloud Generation</span>
+                  </div>
+                </div>
+                <div class="pipe-stage">
+                  <div class="stage-num">04</div>
+                  <div class="stage-body">
+                    <span class="stage-name">PBR Texture Baking</span>
+                    <span class="stage-sub">WebGL 2.0 / glTF Export</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Vault Gallery -->
@@ -435,6 +481,37 @@ export function createWorkspacePage() {
 
   if (browseBtn && fileInput) {
     browseBtn.addEventListener("click", () => fileInput.click());
+  }
+
+  const loadSampleBtn = container.querySelector("#loadSampleDatasetBtn");
+  if (loadSampleBtn) {
+    loadSampleBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const samplePhotos = [
+        {
+          name: "Aakar_Pose01_LivingRoom_Wide.jpg",
+          size: 1024 * 740,
+          type: "image/jpeg",
+          dataUrl: createSampleSvgDataUrl("POSE 01: Living Room Wide Perspective", "#163826", "#0b1c14", "Camera: 24mm | Overlap: 78% | ISO 100")
+        },
+        {
+          name: "Aakar_Pose02_Workstation_Rig.jpg",
+          size: 1024 * 610,
+          type: "image/jpeg",
+          dataUrl: createSampleSvgDataUrl("POSE 02: Workstation Dual Displays", "#1e3328", "#081510", "Camera: 35mm | Overlap: 82% | ISO 120")
+        },
+        {
+          name: "Aakar_Pose03_Lounge_Window_Raycast.jpg",
+          size: 1024 * 820,
+          type: "image/jpeg",
+          dataUrl: createSampleSvgDataUrl("POSE 03: Panoramic Window Raycast", "#243c30", "#091c13", "Camera: 28mm | Overlap: 75% | ISO 100")
+        }
+      ];
+
+      samplePhotos.forEach(p => storage.savePhoto(user.id, p));
+      renderVaultGrid();
+      showUploadAlert("Successfully loaded 3 sample spatial room captures for testing!", false);
+    });
   }
 
   if (dropZone && fileInput) {

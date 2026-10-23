@@ -18,6 +18,9 @@ export function createNavbar() {
       <a class="logo" href="/" data-route="/">AA<span>KAR</span></a>
 
       <nav class="nav-links" id="nav-links">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">
+          <span aria-hidden="true">☀</span><span class="theme-toggle-label">Light mode</span>
+        </button>
         <a href="/" class="nav-link ${currentPath === "/" ? "active" : ""}" data-route="/">Home</a>
         <a href="/explore" class="nav-link ${currentPath === "/explore" ? "active" : ""}" data-route="/explore">Explore 3D</a>
         <a href="/about" class="nav-link ${currentPath === "/about" ? "active" : ""}" data-route="/about">About & Process</a>
@@ -48,6 +51,23 @@ export function createNavbar() {
     // Attach listeners
     const hamburger = header.querySelector("#hamburger");
     const navLinks = header.querySelector("#nav-links");
+
+    const themeToggle = header.querySelector("#themeToggle");
+    const applyTheme = (theme) => {
+      document.documentElement.dataset.theme = theme;
+      try { localStorage.setItem("aakar-theme", theme); } catch { /* Storage may be unavailable. */ }
+      if (themeToggle) {
+        const light = theme === "light";
+        themeToggle.setAttribute("aria-label", `Switch to ${light ? "dark" : "light"} theme`);
+        themeToggle.innerHTML = `<span aria-hidden="true">${light ? "☾" : "☀"}</span><span class="theme-toggle-label">${light ? "Dark mode" : "Light mode"}</span>`;
+      }
+    };
+    let savedTheme = "dark";
+    try { savedTheme = localStorage.getItem("aakar-theme") || "dark"; } catch { /* Use the default theme. */ }
+    applyTheme(savedTheme === "light" ? "light" : "dark");
+    themeToggle?.addEventListener("click", () => {
+      applyTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light");
+    });
 
     if (hamburger && navLinks) {
       hamburger.addEventListener("click", () => {
